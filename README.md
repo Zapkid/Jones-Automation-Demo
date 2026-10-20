@@ -29,11 +29,11 @@ Playwright + pytest + Allure automation for the **"Request a call back"** lead f
 
 ```bash
 # 1. Python environment
-python -m venv .venv && source .venv/bin/activate
+python3 -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
 
 # 2. Playwright browser
-playwright install --with-deps chromium
+python3 -m playwright install --with-deps chromium
 
 # 3. Run against the real site (default env=prod)
 make test

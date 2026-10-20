@@ -101,5 +101,5 @@ class PlaywrightManager:
                 try:
                     context.tracing.stop(path=trace_path)
                 except Exception:
-                    pass
+                    print(f"Error stopping trace: {trace_path}")
             page.close()
