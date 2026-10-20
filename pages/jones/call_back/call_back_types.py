@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from typing import Final
 
@@ -32,3 +32,8 @@ class SubmitResult:
     url: str
     heading: str | None
     screenshot_before_submit: str
+    employees_selected: str
+    # Native HTML5 validation failures left on the form when it did not submit.
+    invalid_fields: tuple[str, ...] = field(default=())
+    # Query string the GET form carried to the thank-you page (the form has no method).
+    submitted: dict[str, str] = field(default_factory=dict)

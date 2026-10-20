@@ -57,6 +57,20 @@ class ThankYouPage(BasePage):
     def heading(self) -> str | None:
         return self._heading()
 
+    @property
+    def subheading(self) -> str | None:
+        sub = self.page.get_by_role("heading", level=2)
+        if sub.count() == 0:
+            return None
+        return sub.first.inner_text().strip()
+
+    @property
+    def back_home_href(self) -> str | None:
+        link = self.page.get_by_role("link", name=self.loc.BACK_HOME_LINK_TEXT)
+        if link.count() == 0:
+            return None
+        return link.first.get_attribute("href")
+
     @allure.step("Write arrival message to console.log")
     def log_arrival(self, message: str) -> None:
         """Emit the message to the browser console *and* the Python test log."""

@@ -53,6 +53,14 @@ def _validate_expected(expected: Any, *, ref: str) -> None:
         raise CallBackCaseValidationError(
             f"{ref}: expected.outcome must be one of {sorted(_VALID_OUTCOMES)!r}"
         )
+    invalid_field = expected_map.get("invalid_field")
+    if invalid_field is None:
+        return
+    if outcome != SubmitOutcome.STAYS_ON_FORM.value:
+        raise CallBackCaseValidationError(
+            f"{ref}: expected.invalid_field only applies to outcome 'stays_on_form'"
+        )
+    _require_non_empty_str(invalid_field, ref=ref, field="expected.invalid_field")
 
 
 def validate_call_back_case(case: Any, *, index: int) -> dict[str, Any]:

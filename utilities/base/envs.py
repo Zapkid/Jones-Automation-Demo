@@ -55,6 +55,11 @@ class EnvConfig:
         return self.env == Env.LOCAL and not os.getenv("JONES_BASE_URL")
 
     @property
+    def test_data_dir(self) -> Path:
+        """Per-env CSV data: ``resources/test_data/<env>/``."""
+        return self.repo_root / "resources" / "test_data" / self.env.value
+
+    @property
     def reports_dir(self) -> Path:
         return self.repo_root / "reports"
 

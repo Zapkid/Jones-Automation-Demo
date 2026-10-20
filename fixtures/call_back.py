@@ -22,12 +22,15 @@ from utilities.base.call_back_case_schema import (
 )
 from utilities.base.envs import EnvConfig
 from utilities.base.json_data import load_json_file
+from utilities.base.lead_csv_schema import LeadRow, load_invalid_leads, load_valid_leads
 from utilities.base.verifications import Verifications
 from workflows.call_back_workflow import CallBackWorkflow
 
 CALL_BACK_CASES_FILE: Final[Path] = (
     Path(__file__).resolve().parents[1] / "resources" / "test_data" / "call_back_cases.jsonc"
 )
+VALID_LEADS_CSV: Final[str] = "valid_leads.csv"
+INVALID_LEADS_CSV: Final[str] = "invalid_leads.csv"
 _RUN_ID_TOKEN: Final[str] = "{run_id}"
 
 
@@ -88,4 +91,25 @@ def case_to_form(case: dict[str, Any], *, run_id: str) -> CallBackForm:
         company=form["company"],
         website=form["website"],
         employees=form.get("employees"),
+    )
+
+
+def load_env_valid_leads(env_config: EnvConfig) -> list[LeadRow]:
+    return load_valid_leads(env_config.test_data_dir / VALID_LEADS_CSV)
+
+
+def load_env_invalid_leads(env_config: EnvConfig) -> list[LeadRow]:
+    return load_invalid_leads(env_config.test_data_dir / INVALID_LEADS_CSV)
+
+
+def lead_to_form(lead: LeadRow, *, run_id: str) -> CallBackForm:
+    """Expand ``{run_id}`` in every text value of a CSV row."""
+    form = lead.form
+    return CallBackForm(
+        name=form.name.replace(_RUN_ID_TOKEN, run_id),
+        email=form.email.replace(_RUN_ID_TOKEN, run_id),
+        phone=form.phone.replace(_RUN_ID_TOKEN, run_id),
+        company=form.company.replace(_RUN_ID_TOKEN, run_id),
+        website=form.website.replace(_RUN_ID_TOKEN, run_id),
+        employees=form.employees,
     )

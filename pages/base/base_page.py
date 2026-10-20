@@ -31,13 +31,10 @@ class BasePage:
 
     # ---------- locators ---------- #
 
-    def by_label_placeholder_or_name(self, label: str, name_attr: str) -> Locator:
-        """Resolve a form control by accessible label, then placeholder, then ``name``."""
+    def by_id_or_label(self, element_id: str, label: str) -> Locator:
+        """Resolve a form control by ``id``, falling back to its exact accessible label."""
         return (
-            self.page.get_by_label(label, exact=False)
-            .or_(self.page.get_by_placeholder(label, exact=False))
-            .or_(self.page.locator(f"[name='{name_attr}' i]"))
-            .first
+            self.page.locator(f"#{element_id}").or_(self.page.get_by_label(label, exact=True)).first
         )
 
     # ---------- interaction helpers ---------- #
