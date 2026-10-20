@@ -9,6 +9,8 @@ parametrized test invocation. The flow:
   4. Screenshots the page before clicking "Request a call back".
   5. Clicks "Request a call back".
   6. Writes to console.log when the thank-you page is reached.
+
+Blocked submits (native HTML5 validation) are checked through the same flow.
 """
 
 from __future__ import annotations
@@ -68,13 +70,26 @@ def test_request_call_back(
     )
     verify.equals(result.outcome, expected, what="Outcome after submit")
 
+    logged: bool = any(THANK_YOU_LOG_MESSAGE in line for line in console_messages)
+    expected_employees: str = form.employees or DEFAULT_EMPLOYEES
+    verify.equals(
+        result.employees_selected, expected_employees, what="Number of Employees before submit"
+    )
+
     if expected == SubmitOutcome.THANK_YOU:
-        verify.is_true(
-            any(THANK_YOU_LOG_MESSAGE in line for line in console_messages),
-            what="Thank-you arrival was written to console.log",
+        verify.is_true(logged, what="Thank-you arrival was written to console.log")
+        # The form is a plain GET, so the thank-you URL carries what was really submitted.
+        verify.equals(
+            result.submitted.get("number_of_employees"),
+            expected_employees,
+            what="Submitted number_of_employees",
         )
+        verify.equals(result.submitted.get("email"), form.email, what="Submitted email")
     else:
-        verify.is_false(
-            any(THANK_YOU_LOG_MESSAGE in line for line in console_messages),
-            what="No thank-you console.log on a rejected submit",
-        )
+        verify.is_false(logged, what="No thank-you console.log on a blocked submit")
+        invalid_field: str | None = case["expected"].get("invalid_field")
+        if invalid_field is not None:
+            verify.is_true(
+                invalid_field in result.invalid_fields,
+                what=f"Validation flags #{invalid_field} (invalid: {list(result.invalid_fields)})",
+            )

@@ -1,71 +1,105 @@
 <!doctype html>
 <!--
-  Local stand-in for the landing page under test. Mirrors the fields named in
-  the exercise so the suite can run offline / in CI with `--env=local`.
+  Offline copy of the real landing page (https://test.netlify.app/) used by
+  `--env=local`. Markup of the form is kept verbatim so locators and native
+  HTML5 validation behave exactly like the live site; only the external CDN
+  fonts / CSS / JS / images are dropped so the page loads without network.
 -->
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Talk to sales</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Landing Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-      body { font-family: system-ui, sans-serif; background: #f5f6f8; margin: 0; }
-      main { max-width: 480px; margin: 48px auto; background: #fff; padding: 32px; border-radius: 12px;
-             box-shadow: 0 2px 12px rgba(0, 0, 0, .08); }
-      label { display: block; margin-top: 14px; font-weight: 600; font-size: 14px; }
-      input, select { width: 100%; box-sizing: border-box; padding: 10px; margin-top: 6px;
-                      border: 1px solid #c8ccd2; border-radius: 6px; font-size: 15px; }
-      input:invalid:not(:placeholder-shown) { border-color: #d33; }
-      button { margin-top: 24px; width: 100%; padding: 12px; font-size: 16px; border: 0;
-               border-radius: 6px; background: #2563eb; color: #fff; cursor: pointer; }
-      .error { color: #d33; font-size: 13px; min-height: 1em; margin-top: 8px; }
+      body { font-family: "Open Sans", system-ui, sans-serif; margin: 0; color: #333; }
+      .row { max-width: 1000px; margin: 0 auto; padding: 0 16px; display: flex; flex-wrap: wrap; gap: 24px; }
+      .columns { flex: 1 1 320px; }
+      .panel { background: #f2f4f7; padding: 24px; border-radius: 6px; }
+      .inplace-label { display: flex; flex-direction: column-reverse; }
+      .input, select { width: 100%; box-sizing: border-box; padding: 10px; font-size: 15px; }
+      .primary.button { width: 100%; padding: 12px; font-size: 16px; background: #2563eb; color: #fff; border: 0; }
     </style>
   </head>
   <body>
-    <main>
-      <h1>Get a call back</h1>
-      <form id="call-back-form" action="thank-you.html" method="get" novalidate>
-        <label for="name">Name</label>
-        <input id="name" name="name" placeholder="Name" required />
+    <header>
+      <div class="row">
+        <div class="large-6 medium-6 columns"><span class="logo">Logo</span></div>
+        <div class="large-6 medium-6 columns text-right"><h3 class="phone">(800) 000 0000</h3></div>
+      </div>
+    </header>
 
-        <label for="email">Email</label>
-        <input id="email" name="email" type="email" placeholder="Email" required />
+    <div class="bg-wrapper">
+      <div class="bg"></div>
+      <div class="row">
+        <div class="large-7 medium-7 columns">
+          <div class="hero">
+            <h1>Infuse your business with synergy</h1>
+            <h4>Acme automates your strategic marketing issues with a full suite of awesome, performance enhancing, turbo chargers!</h4>
+          </div>
+          <div class="main">
+            <h3>What we can do for you</h3>
+            <ul>
+              <li>Some key benefit/feature that will blow peoples mind in an easy to scan bullet point</li>
+              <li>Another benefit or key feature that adds real value to this offering and makes people even more prone to convert</li>
+              <li>A last selling point that will close the deal and make everybody jump out their chairs to fill out the form</li>
+            </ul>
+          </div>
+        </div>
+        <div class="large-5 medium-5 columns">
+          <div class="panel">
+            <form action="thank-you.html">
+              <h3>Interested in our Service?</h3>
+              <p>
+                Then get in touch straight away, don't wait. Just fill out this form and we'll get back to you.
+              </p>
+              <p class="inplace-label">
+                <input id="name" type="text" name="name" required="" placeholder="Your full name" class="input">
+                <label for="name">Name *</label>
+              </p>
+              <p class="inplace-label">
+                <input id="email" type="email" name="email" required="" placeholder="Your email address" class="input">
+                <label for="email">Email *</label>
+              </p>
+              <p class="inplace-label">
+                <input id="phone" type="text" name="phone" required="" placeholder="Your phone number" class="input">
+                <label for="phone">Phone *</label>
+              </p>
+              <p class="inplace-label">
+                <input id="company" type="text" name="company" placeholder="Company name" class="input">
+                <label for="company">Company</label>
+              </p>
+              <p class="inplace-label">
+                <input id="website" type="url" name="website" placeholder="example.com" class="input">
+                <label for="website">Website</label>
+              </p>
+              <div>
+                <label for="employees">Number of Employees</label>
+                <div class="select-wrapper" data-value="1-10">
+                  <select id="employees" name="number_of_employees">
+                    <option>1-10</option>
+                    <option>11-50</option>
+                    <option>51-500</option>
+                    <option>500+</option>
+                  </select>
+                </div>
+              </div>
+              <p>
+                <button class="primary button">Request a call back</button>
+              </p>
+              <p class="text-center"><small>We will never send you spam and you'll always be able to unsubscribe from our mailing list.</small></p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
 
-        <label for="phone">Phone</label>
-        <input id="phone" name="phone" type="tel" placeholder="Phone" required />
-
-        <label for="company">Company</label>
-        <input id="company" name="company" placeholder="Company" required />
-
-        <label for="website">Website</label>
-        <input id="website" name="website" type="url" placeholder="Website" />
-
-        <label for="employees">Number of Employees</label>
-        <select id="employees" name="employees">
-          <option selected>1-10</option>
-          <option>11-50</option>
-          <option>51-500</option>
-          <option>500+</option>
-        </select>
-
-        <div class="error" id="form-error" role="alert"></div>
-        <button type="submit">Request a call back</button>
-      </form>
-    </main>
-    <script>
-      const form = document.getElementById("call-back-form");
-      form.addEventListener("submit", (event) => {
-        event.preventDefault();
-        const invalid = [...form.elements].find((el) => el.willValidate && !el.checkValidity());
-        if (invalid) {
-          document.getElementById("form-error").textContent =
-            `Please enter a valid ${invalid.labels[0].textContent.toLowerCase()}.`;
-          invalid.focus();
-          return;
-        }
-        // Simulate the network hop to the lead backend before redirecting.
-        setTimeout(() => { window.location.href = "thank-you.html"; }, 300);
-      });
-    </script>
+    <footer class="text-center">
+      <div class="row">
+        <div class="large-12">
+          <div class="copyright">© Acme 2013</div>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

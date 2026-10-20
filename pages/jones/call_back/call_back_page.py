@@ -20,14 +20,23 @@ class CallBackPage(BasePage):
     # ---------- locators ---------- #
 
     def field(self, selector: FieldSelector) -> Locator:
-        return self.by_label_placeholder_or_name(selector.label, selector.name_attr)
+        return self.by_id_or_label(selector.element_id, selector.label)
+
+    @property
+    def form(self) -> Locator:
+        return self.page.locator(self.loc.FORM_CSS)
 
     @property
     def submit_button(self) -> Locator:
-        return (
-            self.page.get_by_role("button", name=self.loc.SUBMIT_BUTTON_TEXT, exact=False)
-            .or_(self.page.locator(f"input[type=submit][value*='{self.loc.SUBMIT_BUTTON_TEXT}' i]"))
-            .first
+        return self.form.get_by_role("button", name=self.loc.SUBMIT_BUTTON_TEXT)
+
+    def invalid_field_ids(self) -> list[str]:
+        """Ids of controls failing native HTML5 validation (required / type=email / type=url)."""
+        return list(
+            self.form.evaluate(
+                "f => [...f.elements].filter(el => el.willValidate && !el.validity.valid)"
+                ".map(el => el.id)"
+            )
         )
 
     # ---------- actions ---------- #

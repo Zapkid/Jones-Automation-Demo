@@ -1,8 +1,8 @@
 # jones-aqa
 
 Playwright + pytest + Allure automation for the **"Request a call back"** lead form.
-Page Object Model, typed Python, data-driven cases, and an offline mock site so the suite
-runs anywhere, including CI.
+Page Object Model, typed Python, data-driven cases, and an offline copy of the page's markup so
+the suite runs anywhere, including CI.
 
 ## Resources
 
@@ -56,7 +56,7 @@ Optional: `cp .env.example .env` to change defaults (`ENV`, `JONES_BASE_URL`, mo
 │   └── jones/           # call_back, thank_you
 ├── reports/             # Allure, traces, screenshots (gitignored)
 ├── resources/
-│   ├── mock_site/       # Offline stand-in for the landing + thank-you pages
+│   ├── mock_site/       # Offline copy of the live form markup + a thank-you page
 │   └── test_data/       # call_back_cases.jsonc
 ├── tests/               # Test suites only
 ├── utilities/           # env, driver, Allure, JSONC + schema, mock server
@@ -67,12 +67,26 @@ Optional: `cp .env.example .env` to change defaults (`ENV`, `JONES_BASE_URL`, mo
 
 | Id | Markers | Flow | Expected |
 | --- | --- | --- | --- |
-| CB1 | smoke | Fill all fields, keep default size, screenshot, submit | Thank-you page + console.log |
-| CB2 | smoke | Same, plus size 1-10 → 51-500 (bonus) | Thank-you page + console.log |
-| CB3 | regression · local only | Invalid email | Stays on form, no console.log |
+| CB1 | smoke | Fill all fields, keep default size, screenshot, submit | Thank-you page, console.log, submitted `number_of_employees=1-10` |
+| CB2 | smoke | Same, plus size 1-10 → 51-500 (bonus) | Thank-you page, console.log, submitted `number_of_employees=51-500` |
+| CB3 | regression | Invalid email | Browser validation flags `#email`, stays on form, no console.log |
+| CB4 | regression | Website `example.com`, as the placeholder suggests | Browser validation flags `#website` and blocks the lead (known defect, see below) |
 
 To add a case, add an entry to `resources/test_data/call_back_cases.jsonc`. It's schema-checked at
 collection. `{run_id}` in any value expands to a unique, timestamped id per run.
+
+## Findings on the live page
+
+Found while automating, from the page's HTML:
+
+| Sev | Finding |
+| --- | --- |
+| High | **PII in the URL.** `<form action="thank-you.html">` has no `method`, so it submits as `GET`. Name, email and phone end up in the thank-you URL, browser history, server/CDN logs, analytics and the `Referer` header sent to third parties. Use `method="post"` (or Netlify Forms). |
+| Medium | **Placeholder contradicts validation.** Website shows `example.com`, but `type="url"` rejects it without `https://`. A visitor who follows the hint can't send the lead at all (CB4). |
+| Medium | **No spam protection.** No honeypot, CAPTCHA or Netlify `data-netlify-honeypot`, so the lead form is open to bot submissions. |
+| Low | **Phone isn't validated.** `type="text"` with no `pattern`, so any text is accepted, and mobile shows a full keyboard instead of `type="tel"`'s number pad. |
+| Low | **Broken and insecure assets.** The Google Fonts link is `http://` (mixed content, blocked on HTTPS). The Font Awesome link has `rel="stylesheet&quot;"`, so it never loads. |
+| Low | The label sits after the input (`inplace-label`), so on-screen reading order is input-then-label. `© Acme 2013` is stale. |
 
 ## Make targets
 

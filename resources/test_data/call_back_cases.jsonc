@@ -5,9 +5,10 @@
 //               in the CRM / form backend (e.g. aqa+20261020153012-cb1@example.com).
 //
 // Fields:
-//   form.employees   — optional; omit to keep the page default ("1-10").
-//   expected.outcome — "thank_you" | "stays_on_form".
-//   envs             — optional; restrict the case to these envs (local | prod).
+//   form.employees         — optional; omit to keep the page default ("1-10").
+//   expected.outcome       — "thank_you" | "stays_on_form".
+//   expected.invalid_field — optional; id of the input native HTML5 validation must flag.
+//   envs                   — optional; restrict the case to these envs (local | prod).
 {
   "cases": [
     {
@@ -38,12 +39,10 @@
       "expected": { "outcome": "thank_you" }
     },
     {
-      // Negative guard: the real site's validation rules are unknown, so this
-      // case is limited to the bundled mock site where they are defined.
+      // The form has no `novalidate`, so the browser's own type=email check blocks it.
       "id": "CB3",
-      "description": "Invalid email is rejected and the visitor stays on the form",
+      "description": "Invalid email is blocked by validation and the visitor stays on the form",
       "markers": ["regression"],
-      "envs": ["local"],
       "form": {
         "name": "Rowan AQA",
         "email": "not-an-email",
@@ -51,7 +50,23 @@
         "company": "Jones AQA Ltd",
         "website": "https://example.com"
       },
-      "expected": { "outcome": "stays_on_form" }
+      "expected": { "outcome": "stays_on_form", "invalid_field": "email" }
+    },
+    {
+      // Known UX defect: the Website placeholder says "example.com", but the input is
+      // type=url, which requires a scheme. Typing what the placeholder suggests blocks
+      // the whole lead. Kept as a pinned regression so a fix shows up as a test change.
+      "id": "CB4",
+      "description": "Website typed as the placeholder suggests (no https://) blocks the lead",
+      "markers": ["regression"],
+      "form": {
+        "name": "Rowan AQA",
+        "email": "aqa+{run_id}@example.com",
+        "phone": "0501234567",
+        "company": "Jones AQA Ltd",
+        "website": "example.com"
+      },
+      "expected": { "outcome": "stays_on_form", "invalid_field": "website" }
     }
   ]
 }

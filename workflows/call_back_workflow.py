@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+from urllib.parse import parse_qsl, urlsplit
 
 import allure
 
@@ -40,20 +41,32 @@ class CallBackWorkflow:
         if form.employees is not None:
             self.call_back.select_employees(form.employees)
 
+        employees_selected = self.call_back.selected_employees()
         screenshot = self._screenshot_before_submit(screenshot_name)
         self.call_back.submit()
 
         reached: bool = self.thank_you.wait_until_reached(
             **({} if expect_thank_you else {"timeout_ms": _NEGATIVE_WAIT_MS})
         )
-        if reached:
-            self.thank_you.log_arrival(f"{THANK_YOU_LOG_MESSAGE}: {self.call_back.page.url}")
+        url: str = self.call_back.page.url
+        if not reached:
+            return SubmitResult(
+                outcome=SubmitOutcome.STAYS_ON_FORM,
+                url=url,
+                heading=None,
+                screenshot_before_submit=str(screenshot),
+                employees_selected=employees_selected,
+                invalid_fields=tuple(self.call_back.invalid_field_ids()),
+            )
 
+        self.thank_you.log_arrival(f"{THANK_YOU_LOG_MESSAGE}: {url}")
         return SubmitResult(
-            outcome=SubmitOutcome.THANK_YOU if reached else SubmitOutcome.STAYS_ON_FORM,
-            url=self.call_back.page.url,
-            heading=self.thank_you.heading if reached else None,
+            outcome=SubmitOutcome.THANK_YOU,
+            url=url,
+            heading=self.thank_you.heading,
             screenshot_before_submit=str(screenshot),
+            employees_selected=employees_selected,
+            submitted=dict(parse_qsl(urlsplit(url).query)),
         )
 
     @allure.step("Screenshot the page before clicking 'Request a call back'")
