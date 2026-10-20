@@ -1,5 +1,7 @@
 # Architecture
 
+Back to the [README](../README.md).
+
 ```txt
 tests/call_back/test_request_call_back.py      ← intent + verifications only
         │  (parametrized from resources/test_data/call_back_cases.jsonc)
@@ -11,6 +13,24 @@ workflows/call_back_workflow.py                ← business flow: fill → size 
                 │
                 ▼
         pages/base/base_page.py                ← goto / fill / click / select with Allure steps
+```
+
+## Repository layout
+
+```txt
+.
+├── docs/                # Billing review, test cases, findings, running, architecture
+├── fixtures/            # pytest fixtures (env + mock site, browser, call-back)
+├── pages/               # Page Object Model
+│   ├── base/
+│   └── jones/           # call_back, thank_you
+├── reports/             # Allure, traces, screenshots (gitignored)
+├── resources/
+│   ├── mock_site/       # Offline copies of the live form and thank-you pages
+│   └── test_data/       # call_back_cases.jsonc + <env>/valid_leads.csv, invalid_leads.csv
+├── tests/               # Test suites only
+├── utilities/           # env, driver, Allure, JSONC + schema, mock server
+└── workflows/           # Multi-page business flows
 ```
 
 ## Layers
