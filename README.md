@@ -25,6 +25,34 @@ Playwright + pytest + Allure automation for the **"Request a call back"** lead f
 | Click "Request a call back" | `CallBackPage.submit` |
 | console.log on the thank-you page | `ThankYouPage.log_arrival`: browser `console.log` + Python log, asserted by the test |
 
+## My approach to automation and QA
+
+These are the principles behind the project. The next section shows where each one is applied.
+
+1. **A test is evidence, not a script.** It should check an outcome someone cares about (what
+   was submitted, what the user saw), not just that steps ran without an exception.
+2. **Automate by risk.** The flows that lose revenue or leads come first, and so do the
+   regressions people actually make. Tests against live systems should have small, traceable
+   side effects.
+3. **Keep data separate from logic.** Cases live in data files with a schema, so adding a
+   scenario is a data change, and a bad row fails fast with a clear message.
+4. **Deterministic and isolated.** Every test gets a fresh browser context. Waits are on
+   conditions, not fixed sleeps. Tests can run in parallel.
+5. **A failure should explain itself.** Every check is a named step. A failure attaches a
+   screenshot, URL, page HTML, browser console and a trace. Allure groups failures into product
+   defects and test infrastructure.
+6. **Track known bugs in the suite; never hide them.** A test is never skipped or deleted to get
+   green. A known defect becomes a strict expected failure, so the suite says when it's fixed.
+7. **Locators follow the page's contract, not its layout.** Ids and accessible labels come first.
+   Layout-based selectors and text that can match more than one element are avoided.
+8. **Layers with one job each.** Tests state intent, workflows run business flows, page objects
+   own selectors, and a `Verifications` layer does every assertion.
+9. **Fast feedback in CI.** Lint and the full suite run on every PR, with a secret scan alongside.
+   Artifacts are uploaded whether the run passes or fails.
+10. **Automation is one tool among several.** Reading the markup and exploring by hand find
+    things a script won't. Those findings are reported with severity, impact and a proposed
+    fix, because quality is a product conversation, not a pass/fail count.
+
 ## Beyond the brief
 
 The brief asks for a script that fills the form and clicks a button. These are the decisions
