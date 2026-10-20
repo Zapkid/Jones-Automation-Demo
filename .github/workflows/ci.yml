@@ -1,0 +1,70 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      env:
+        description: "Target env (local = bundled mock site, prod = real site)"
+        type: choice
+        options: [local, prod]
+        default: local
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      ENV: ${{ inputs.env || 'local' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Install Playwright browsers
+        run: python -m playwright install --with-deps chromium
+
+      - name: Lint
+        run: |
+          black --check .
+          isort --check-only .
+          flake8 .
+
+      - name: Run tests
+        run: pytest --env="$ENV" --no-allure-report
+
+      - name: Build Allure report
+        if: always()
+        run: |
+          npm install -g allure-commandline
+          allure generate reports/allure_results -o reports/allure_report --clean
+
+      - name: Upload Allure report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: reports/allure_report
+          retention-days: 14
+
+      - name: Upload screenshots & traces
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots-and-traces
+          path: |
+            reports/screenshots
+            reports/traces
+          retention-days: 14

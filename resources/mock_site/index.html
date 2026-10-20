@@ -1,0 +1,71 @@
+<!doctype html>
+<!--
+  Local stand-in for the landing page under test. Mirrors the fields named in
+  the exercise so the suite can run offline / in CI with `--env=local`.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Talk to sales</title>
+    <style>
+      body { font-family: system-ui, sans-serif; background: #f5f6f8; margin: 0; }
+      main { max-width: 480px; margin: 48px auto; background: #fff; padding: 32px; border-radius: 12px;
+             box-shadow: 0 2px 12px rgba(0, 0, 0, .08); }
+      label { display: block; margin-top: 14px; font-weight: 600; font-size: 14px; }
+      input, select { width: 100%; box-sizing: border-box; padding: 10px; margin-top: 6px;
+                      border: 1px solid #c8ccd2; border-radius: 6px; font-size: 15px; }
+      input:invalid:not(:placeholder-shown) { border-color: #d33; }
+      button { margin-top: 24px; width: 100%; padding: 12px; font-size: 16px; border: 0;
+               border-radius: 6px; background: #2563eb; color: #fff; cursor: pointer; }
+      .error { color: #d33; font-size: 13px; min-height: 1em; margin-top: 8px; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Get a call back</h1>
+      <form id="call-back-form" action="thank-you.html" method="get" novalidate>
+        <label for="name">Name</label>
+        <input id="name" name="name" placeholder="Name" required />
+
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" placeholder="Email" required />
+
+        <label for="phone">Phone</label>
+        <input id="phone" name="phone" type="tel" placeholder="Phone" required />
+
+        <label for="company">Company</label>
+        <input id="company" name="company" placeholder="Company" required />
+
+        <label for="website">Website</label>
+        <input id="website" name="website" type="url" placeholder="Website" />
+
+        <label for="employees">Number of Employees</label>
+        <select id="employees" name="employees">
+          <option selected>1-10</option>
+          <option>11-50</option>
+          <option>51-500</option>
+          <option>500+</option>
+        </select>
+
+        <div class="error" id="form-error" role="alert"></div>
+        <button type="submit">Request a call back</button>
+      </form>
+    </main>
+    <script>
+      const form = document.getElementById("call-back-form");
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const invalid = [...form.elements].find((el) => el.willValidate && !el.checkValidity());
+        if (invalid) {
+          document.getElementById("form-error").textContent =
+            `Please enter a valid ${invalid.labels[0].textContent.toLowerCase()}.`;
+          invalid.focus();
+          return;
+        }
+        // Simulate the network hop to the lead backend before redirecting.
+        setTimeout(() => { window.location.href = "thank-you.html"; }, 300);
+      });
+    </script>
+  </body>
+</html>

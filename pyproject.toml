@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jones-aqa"
+version = "0.1.0"
+description = "Playwright + pytest + Allure automation for the 'Request a call back' lead form"
+requires-python = ">=3.12"
+readme = "README.md"
+
+dependencies = [
+    "pytest>=8.2.0",
+    "pytest-xdist>=3.6.0",
+    "pytest-playwright>=0.5.1",
+    "playwright>=1.46.0",
+    "allure-pytest>=2.13.5",
+    "python-dotenv>=1.0.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black>=24.4.0",
+    "flake8>=7.0.0",
+    "flake8-annotations>=3.1.1",
+    "mypy>=1.10.0",
+    "isort>=5.13.2",
+]
+
+[tool.black]
+line-length = 100
+target-version = ["py312"]
+extend-exclude = "\\.venv"
+
+[tool.isort]
+profile = "black"
+line_length = 100
+skip = [".venv"]
+
+[tool.mypy]
+python_version = "3.12"
+strict_optional = true
+warn_unused_ignores = true
+ignore_missing_imports = true
+
+[tool.setuptools.packages.find]
+include = [
+    "fixtures*",
+    "pages*",
+    "resources*",
+    "utilities*",
+    "workflows*",
+]

@@ -1,0 +1,57 @@
+// Data-driven cases for tests/call_back/test_request_call_back.py.
+//
+// Tokens:
+//   {run_id}  — replaced per test with a unique id so every lead is distinguishable
+//               in the CRM / form backend (e.g. aqa+20261020153012-cb1@example.com).
+//
+// Fields:
+//   form.employees   — optional; omit to keep the page default ("1-10").
+//   expected.outcome — "thank_you" | "stays_on_form".
+//   envs             — optional; restrict the case to these envs (local | prod).
+{
+  "cases": [
+    {
+      "id": "CB1",
+      "description": "Lead with default company size (1-10) reaches the thank-you page",
+      "markers": ["smoke"],
+      "form": {
+        "name": "Rowan AQA",
+        "email": "aqa+{run_id}@example.com",
+        "phone": "0501234567",
+        "company": "Jones AQA Ltd",
+        "website": "https://example.com"
+      },
+      "expected": { "outcome": "thank_you" }
+    },
+    {
+      "id": "CB2",
+      "description": "Bonus: lead with company size changed 1-10 → 51-500 reaches the thank-you page",
+      "markers": ["smoke"],
+      "form": {
+        "name": "Rowan AQA",
+        "email": "aqa+{run_id}@example.com",
+        "phone": "0501234567",
+        "company": "Jones AQA Enterprise",
+        "website": "https://example.com",
+        "employees": "51-500"
+      },
+      "expected": { "outcome": "thank_you" }
+    },
+    {
+      // Negative guard: the real site's validation rules are unknown, so this
+      // case is limited to the bundled mock site where they are defined.
+      "id": "CB3",
+      "description": "Invalid email is rejected and the visitor stays on the form",
+      "markers": ["regression"],
+      "envs": ["local"],
+      "form": {
+        "name": "Rowan AQA",
+        "email": "not-an-email",
+        "phone": "0501234567",
+        "company": "Jones AQA Ltd",
+        "website": "https://example.com"
+      },
+      "expected": { "outcome": "stays_on_form" }
+    }
+  ]
+}
