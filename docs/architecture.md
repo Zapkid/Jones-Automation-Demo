@@ -22,14 +22,14 @@ workflows/call_back_workflow.py                ← business flow: fill → size 
 | `pages/` | One class per screen, selectors in a `*_locators.py` dataclass | Each field is resolved by its **`id`, with the exact label as fallback**, so a markup change touches one file. |
 | `fixtures/` | Browser lifecycle, env, page objects, case loading | Function-scoped context/page, so each test is isolated and gets its own trace. |
 | `utilities/` | Env resolution, Playwright driver, Allure helpers, JSONC loader + schema, mock server | No test logic. |
-| `resources/` | Test data (`*.jsonc`) and the mock site | Cases are schema-validated at collection, so a typo fails fast with a clear message. |
+| `resources/` | Test data (`call_back_cases.jsonc`, per-env `<env>/valid_leads.csv` / `invalid_leads.csv`) and the mock site | Data is schema-validated at collection, so a typo fails fast with a clear message. |
 
 ## Environments
 
 | Env | Base URL | Notes |
 | --- | --- | --- |
 | `prod` (default) | `https://test.netlify.app` | The site from the exercise. |
-| `local` | `http://127.0.0.1:8765` | `resources/mock_site` is served automatically by the `mock_site` session fixture. Its form markup is copied verbatim from the live page (CDN assets removed), so locators and native validation match. The thank-you page is a stand-in. Runs fully offline; used by CI. |
+| `local` | `http://127.0.0.1:8765` | `resources/mock_site` is served automatically by the `mock_site` session fixture. Its form markup is copied verbatim from the live page (CDN assets removed), so locators and native validation match. The thank-you page is copied too, and the label focus colour mirrors the live CSS. Runs fully offline; used by CI. |
 
 `JONES_BASE_URL` overrides either env (for example, a Netlify deploy preview).
 

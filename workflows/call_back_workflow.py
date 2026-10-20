@@ -20,7 +20,8 @@ from utilities.allure.allure import attach_screenshot
 from utilities.base.envs import EnvConfig
 
 THANK_YOU_LOG_MESSAGE: str = "Reached the thank you page"
-_NEGATIVE_WAIT_MS: int = 3_000
+# A blocked submit never navigates; this is how long we give it to prove that.
+_NEGATIVE_WAIT_MS: int = 2_000
 
 
 @dataclass
@@ -66,7 +67,7 @@ class CallBackWorkflow:
             heading=self.thank_you.heading,
             screenshot_before_submit=str(screenshot),
             employees_selected=employees_selected,
-            submitted=dict(parse_qsl(urlsplit(url).query)),
+            submitted=dict(parse_qsl(urlsplit(url).query, keep_blank_values=True)),
         )
 
     @allure.step("Screenshot the page before clicking 'Request a call back'")

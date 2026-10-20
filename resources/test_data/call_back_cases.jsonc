@@ -1,4 +1,6 @@
-// Data-driven cases for tests/call_back/test_request_call_back.py.
+// The exercise flow cases for tests/call_back/test_request_call_back.py.
+// Broader valid / invalid combinations live in the per-env CSVs under
+// resources/test_data/<env>/ (valid_leads.csv, invalid_leads.csv).
 //
 // Tokens:
 //   {run_id}  — replaced per test with a unique id so every lead is distinguishable
@@ -37,36 +39,6 @@
         "employees": "51-500"
       },
       "expected": { "outcome": "thank_you" }
-    },
-    {
-      // The form has no `novalidate`, so the browser's own type=email check blocks it.
-      "id": "CB3",
-      "description": "Invalid email is blocked by validation and the visitor stays on the form",
-      "markers": ["regression"],
-      "form": {
-        "name": "Rowan AQA",
-        "email": "not-an-email",
-        "phone": "0501234567",
-        "company": "Jones AQA Ltd",
-        "website": "https://example.com"
-      },
-      "expected": { "outcome": "stays_on_form", "invalid_field": "email" }
-    },
-    {
-      // Known UX defect: the Website placeholder says "example.com", but the input is
-      // type=url, which requires a scheme. Typing what the placeholder suggests blocks
-      // the whole lead. Kept as a pinned regression so a fix shows up as a test change.
-      "id": "CB4",
-      "description": "Website typed as the placeholder suggests (no https://) blocks the lead",
-      "markers": ["regression"],
-      "form": {
-        "name": "Rowan AQA",
-        "email": "aqa+{run_id}@example.com",
-        "phone": "0501234567",
-        "company": "Jones AQA Ltd",
-        "website": "example.com"
-      },
-      "expected": { "outcome": "stays_on_form", "invalid_field": "website" }
     }
   ]
 }

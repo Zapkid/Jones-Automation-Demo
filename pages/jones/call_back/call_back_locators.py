@@ -27,3 +27,12 @@ class CallBackLocators:
 
     FORM_CSS: str = "form[action*='thank-you']"
     SUBMIT_BUTTON_TEXT: str = "Request a call back"
+
+    # Text inputs sit in `p.inplace-label` with their <label> right after them. Focusing an
+    # input paints that label green; unfocused labels have no background.
+    LABEL_CSS_TEMPLATE: str = "label[for='{element_id}']"
+    LABEL_FOCUS_BACKGROUND: tuple[int, int, int, float] = (122, 184, 147, 1.0)
+
+    @property
+    def TEXT_FIELDS(self) -> tuple[FieldSelector, ...]:  # noqa: N802 — reads like the constants
+        return (self.NAME, self.EMAIL, self.PHONE, self.COMPANY, self.WEBSITE)

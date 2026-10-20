@@ -1,19 +1,32 @@
 <!doctype html>
+<!--
+  Offline copy of the live thank-you page (https://test.netlify.app/thank-you.html).
+  Markup kept verbatim; external CDN fonts / CSS / JS dropped so it loads without network.
+-->
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Thank you</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Thank You</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-      body { font-family: system-ui, sans-serif; background: #f5f6f8; margin: 0; }
-      main { max-width: 480px; margin: 96px auto; background: #fff; padding: 32px; border-radius: 12px;
-             text-align: center; box-shadow: 0 2px 12px rgba(0, 0, 0, .08); }
+      body { font-family: "Open Sans", system-ui, sans-serif; margin: 0; color: #333; }
+      .panel { max-width: 480px; margin: 96px auto; background: #f2f4f7; padding: 32px; border-radius: 6px; }
+      .text-center { text-align: center; }
     </style>
   </head>
   <body>
-    <main>
-      <h1>Thank you!</h1>
-      <p>One of our team will call you back shortly.</p>
-    </main>
+    <div class="bg-wrapper thank-you">
+      <div class="bg"></div>
+
+      <div class="row">
+        <div class="large-5 medium-6 small-10 small-centered medium-centered large-centered  panel columns">
+          <h1>Thank You!</h1>
+          <h2 class="text-center">You'll hear from us soon.</h2>
+          <p class="text-center button"><a href="/">Back to Home »</a></p>
+          <div class="copyright text-center">© Acme 2013</div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
