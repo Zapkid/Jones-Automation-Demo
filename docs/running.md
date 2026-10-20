@@ -12,7 +12,6 @@ Make targets, pytest options and where artifacts land. Back to the [README](../R
 | `make test-smoke` | `-m smoke` |
 | `make test-regression` | `-m regression` |
 | `make test-call-back` | `-m call_back` |
-| `make mock-site` | Serve the mock site on :8765 for manual poking |
 | `make allure-serve` | Open Allure report from last run |
 | `make lint` / `make format` | black + isort + flake8 |
 
@@ -22,7 +21,7 @@ Make variables: `ENV` (default `prod`), `HEADED=1`, `SLOWMO=250`, `WORKERS=4`.
 
 ```bash
 pytest \
-  --env=local \          # local | prod
+  --env=prod \           # target env (default prod)
   --browser=chromium \   # chromium | firefox | webkit
   --headed \             # visible browser
   --slowmo=250 \         # ms delay between actions

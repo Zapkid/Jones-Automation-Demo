@@ -10,7 +10,7 @@
 //   form.employees         — optional; omit to keep the page default ("1-10").
 //   expected.outcome       — "thank_you" | "stays_on_form".
 //   expected.invalid_field — optional; id of the input native HTML5 validation must flag.
-//   envs                   — optional; restrict the case to these envs (local | prod).
+//   envs                   — optional; restrict the case to these envs (e.g. prod).
 {
   "cases": [
     {

@@ -38,11 +38,8 @@ python3 -m playwright install --with-deps chromium
 # 3. Run against the real site (default env=prod)
 make test
 
-# …or fully offline against the bundled mock site
-make test ENV=local
-
 # 4. Open the Allure report
 make allure-serve
 ```
 
-Optional: `cp .env.example .env` to change defaults (`ENV`, `JONES_BASE_URL`, mock port).
+Optional: `cp .env.example .env` to change defaults (`ENV`, `JONES_BASE_URL`, browser channel).
