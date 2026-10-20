@@ -36,6 +36,7 @@ Severity: **S1** blocks payment or creates a security / compliance risk ·
 | F12 | S2 | **"Cancel" sits right next to the primary action**, with no confirmation and no stated outcome. | One mis-click throws away everything the user typed. Where does Cancel go: the previous step, the plan page, or does it close the window? |
 | F13 | S3 | Title **"Account Information"** for a billing/payment form, and generic help text "Please fill in the fields below." | Misleading. It should say *Payment details* / *Billing address* and show the plan being paid for. |
 | F14 | S3 | **"\* indicates required information"** appears at the bottom. | Users read this after they've already filled the form. Convention puts it at the top. |
+| F15 | S3 | **Button order must match the rest of the product.** Here the primary action (*Continue*) is on the left and *Cancel* on the right. | There's no single right side: Windows puts the primary button on the left, macOS on the right. What matters is that every dialog and step in the product uses the same order, so users don't click Cancel by muscle memory. Check against the other billing and checkout screens. |
 
 ### Usability and accessibility
 
@@ -122,6 +123,21 @@ Severity: **S1** blocks payment or creates a security / compliance risk ·
 | 2 | Open **State or Province**. | For the UK the field is hidden or optional (*County, optional*). **Actual:** required, US/CA-only list → **Bug F2**. |
 | 3 | Enter postal code `SW1A 2AA` (with the space). | Accepted and normalized. **Actual:** "no dashes" hint and a short field. A space or a 7-character code is likely rejected → **Bug F3**. |
 | 4 | Submit. | Payment succeeds and AVS gets `GB` + postal code. |
+
+### TC-04: Empty form is blocked with an error on every required field
+
+| | |
+| --- | --- |
+| **Priority** | P1 · Regression |
+| **Preconditions** | Same as TC-01. Browser network tab (or gateway sandbox log) open to watch for requests. |
+| **Test data** | None: every field left empty, Card Type and the dropdowns left on their defaults / placeholders. |
+
+| Step | Action | Expected result |
+| --- | --- | --- |
+| 1 | Open the widget and click **Continue** without entering anything. | The form doesn't submit. **No** request goes to the payment gateway, and the button doesn't stay in a loading state. |
+| 2 | Check each required field. | An inline error appears on Card Number, **Month**, Year, First Name, Last Name, Street Address, City, State and Postal Code. Month is flagged even though the mock-up shows no asterisk on it (**Bug F8**). MI and address line 2 are **not** flagged. |
+| 3 | Check focus and announcements. | Focus moves to the first invalid field (Card Number). Each error is linked to its field (`aria-describedby` / `aria-invalid`) and is read out by a screen reader. |
+| 4 | Fill one field (Card Number) and click **Continue** again. | Only that field's error clears, and the remaining errors stay. Nothing typed is lost. |
 
 > More coverage to add as one-liners: Luhn-invalid number · brand/number mismatch (VISA +
 > `378282246310005`) · pasted number with spaces · 3-D Secure challenge success/fail/abandon ·
