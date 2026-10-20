@@ -1,4 +1,4 @@
-.PHONY: install browsers test test-smoke test-regression test-call-back mock-site allure-serve allure-generate lint format clean
+.PHONY: install browsers test test-smoke test-regression test-call-back allure-serve allure-generate lint format clean
 
 PY ?= python
 PYTEST ?= pytest
@@ -28,9 +28,6 @@ test-regression:
 
 test-call-back:
 	$(PYTEST) -m call_back --env=$(ENV) --slowmo=$(SLOWMO) $(HEADED_FLAG) $(XDIST_FLAG)
-
-mock-site:
-	$(PY) -m utilities.server.mock_site
 
 allure-generate:
 	allure generate reports/allure_results -o reports/allure_report --clean

@@ -17,7 +17,6 @@ The CSVs are picked by `--env`, from `resources/test_data/<env>/`:
 
 | Env | `valid_leads.csv` | `invalid_leads.csv` |
 | --- | --- | --- |
-| `local` | 5 rows: all four size buckets, international phone, path+query website, non-Latin name, optional fields blank | 13 rows |
 | `prod` | 3 rows, kept small so the live lead inbox isn't flooded | 13 rows (validation runs in the browser, so nothing reaches the backend) |
 
 `{run_id}` in any value expands to a unique, timestamped id per run. A row with a `known_issue`

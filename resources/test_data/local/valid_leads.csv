@@ -1,9 +1,0 @@
-# Valid lead combinations for --env=local (bundled mock site — safe to run many rows).
-# {run_id} expands to a unique id per test. Empty company/website = optional field left blank.
-# markers: pipe-separated pytest markers.
-id,description,markers,name,email,phone,company,website,employees
-V1,All fields with default size 1-10,smoke,Rowan Kendal,aqa+{run_id}@example.com,0501234567,Jones AQA Ltd,https://example.com,1-10
-V2,Size 11-50 with an international phone number,regression,Dana Levi,aqa+{run_id}@example.co.il,+972 50 123 4567,Levi & Co,https://levi.example.co.il,11-50
-V3,Size 51-500 with a website path and query,regression,Jean-Luc O'Brien,jl.obrien+{run_id}@mail.example.org,(800) 000-0000,O'Brien Holdings,https://www.example.com/about?ref=aqa,51-500
-V4,Size 500+ with a non-Latin name,regression,זואי אנגסטרום,aqa+{run_id}@example.com,050-765-4321,Ångström AB,http://example.se,500+
-V5,Required fields only (company and website left blank),smoke,Sam Lee,aqa+{run_id}@example.com,0501234567,,,1-10

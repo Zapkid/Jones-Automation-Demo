@@ -20,16 +20,15 @@ workflows/call_back_workflow.py                ← business flow: fill → size 
 ```txt
 .
 ├── docs/                # Billing review, test cases, findings, running, architecture
-├── fixtures/            # pytest fixtures (env + mock site, browser, call-back)
+├── fixtures/            # pytest fixtures (env, browser, call-back)
 ├── pages/               # Page Object Model
 │   ├── base/
 │   └── jones/           # call_back, thank_you
 ├── reports/             # Allure, traces, screenshots (gitignored)
 ├── resources/
-│   ├── mock_site/       # Offline copies of the live form and thank-you pages
 │   └── test_data/       # call_back_cases.jsonc + <env>/valid_leads.csv, invalid_leads.csv
 ├── tests/               # Test suites only
-├── utilities/           # env, driver, Allure, JSONC + schema, mock server
+├── utilities/           # env, driver, Allure, JSONC + CSV loaders + schemas
 └── workflows/           # Multi-page business flows
 ```
 
@@ -41,15 +40,14 @@ workflows/call_back_workflow.py                ← business flow: fill → size 
 | `workflows/` | Multi-step business flows | Built only from page-object calls. Returns a typed `SubmitResult`. |
 | `pages/` | One class per screen, selectors in a `*_locators.py` dataclass | Each field is resolved by its **`id`, with the exact label as fallback**, so a markup change touches one file. |
 | `fixtures/` | Browser lifecycle, env, page objects, case loading | Function-scoped context/page, so each test is isolated and gets its own trace. |
-| `utilities/` | Env resolution, Playwright driver, Allure helpers, JSONC loader + schema, mock server | No test logic. |
-| `resources/` | Test data (`call_back_cases.jsonc`, per-env `<env>/valid_leads.csv` / `invalid_leads.csv`) and the mock site | Data is schema-validated at collection, so a typo fails fast with a clear message. |
+| `utilities/` | Env resolution, Playwright driver, Allure helpers, JSONC/CSV loaders + schemas | No test logic. |
+| `resources/` | Test data (`call_back_cases.jsonc`, per-env `<env>/valid_leads.csv` / `invalid_leads.csv`) | Data is schema-validated at collection, so a typo fails fast with a clear message. |
 
 ## Environments
 
 | Env | Base URL | Notes |
 | --- | --- | --- |
 | `prod` (default) | `https://test.netlify.app` | The site from the exercise. |
-| `local` | `http://127.0.0.1:8765` | `resources/mock_site` is served automatically by the `mock_site` session fixture. Its form markup is copied verbatim from the live page (CDN assets removed), so locators and native validation match. The thank-you page is copied too, and the label focus colour mirrors the live CSS. Runs fully offline; used by CI. |
 
 `JONES_BASE_URL` overrides either env (for example, a Netlify deploy preview).
 

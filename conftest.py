@@ -15,7 +15,7 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         "--env",
         action="store",
         default=None,
-        help="Target env (local|prod). Defaults to $ENV or 'prod'.",
+        help="Target env (prod). Defaults to $ENV or 'prod'.",
     )
     group.addoption(
         "--keep-traces",
